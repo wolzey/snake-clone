@@ -58,11 +58,11 @@ export const Player = (game, name) => {
       if (head.x < 0) {
         head.x = game.canvas.width - game.blockSize;
       } else if (head.x > game.canvas.width) {
-        head.x = 0 + game.blockSize;
+        head.x = 0;
       } else if (head.y < 0) {
         head.y = game.canvas.height - game.blockSize;
       } else if (head.y > game.canvas.height) {
-        head.y = 0 + game.blockSize;
+        head.y = 0;
       }
 
       this.checkEdges(head);

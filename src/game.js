@@ -65,6 +65,7 @@ const Game = (canvas, options = { bricks: 100, interval: 20 }) => {
       throw new Error("must be implemented");
     },
     start() {
+      document.getElementById("start-game").hidden = true;
       this.timer = setInterval(this.loop, this.interval);
     },
     setGameSpeed(interval) {
