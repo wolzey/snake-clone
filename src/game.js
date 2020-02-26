@@ -16,6 +16,13 @@ const Game = (canvas, options = { bricks: 100, interval: 20 }) => {
     clear() {
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
+
+    stop() {
+      const startButton = document.getElementById("start-game");
+      startButton.hidden = false;
+      clearInterval(this.timer);
+    },
+
     handleKeydown(event) {
       if (!this.player) return;
 

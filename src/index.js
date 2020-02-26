@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 import Game from "./game";
 
 const canvas = document.getElementById("game");
@@ -45,11 +46,12 @@ export const Player = (game, name) => {
         const currentSegment = this.segments[i];
 
         if (head.x === currentSegment.x && head.y === currentSegment.y) {
-          game.restart();
+          game.stop();
+          game.endGame();
         }
       }
     },
-    go() {
+    loop() {
       // Add new segment to the front remove the last element
       const head = this.segments[0].add(this.velocity);
 
@@ -95,7 +97,7 @@ const Food = game => {
     },
     loop() {
       const originalColor = game.context.fillStyle;
-      game.context.fillStyle = "red";
+      game.context.fillStyle = "tomato";
       this.position.draw(game.context, game.blockSize);
       game.context.fillStyle = originalColor;
     }
@@ -105,15 +107,35 @@ const Food = game => {
 SnakeGame.restart = function() {
   SnakeGame.player = Player(SnakeGame, "Ethan");
   SnakeGame.setScore(0);
+  SnakeGame.start();
+};
+
+SnakeGame.endGame = function() {
+  Swal.fire({
+    icon: "error",
+    title: "Game Over!",
+    text: "Would you like to play again?",
+    confirmButtonText: "Let's do it",
+    cancelButtonText: "Nah",
+    showCancelButton: true
+  }).then(result => {
+    if (result.value) {
+      SnakeGame.restart();
+    } else {
+      SnakeGame.stop();
+    }
+  });
 };
 
 SnakeGame.init(Player(SnakeGame, "Ethan"), Food(SnakeGame));
 SnakeGame.loop = function() {
   SnakeGame.clear();
-  SnakeGame.context.rect(0, 0, SnakeGame.canvas.width, SnakeGame.canvas.width);
-  SnakeGame.context.stroke();
   SnakeGame.food.loop();
-  SnakeGame.player.go();
+  SnakeGame.player.loop();
 };
 
 SnakeGame.start();
+
+const startGameButton = document.getElementById("start-game");
+startGameButton.hidden = true;
+startGameButton.addEventListener("click", SnakeGame.restart.bind(SnakeGame));

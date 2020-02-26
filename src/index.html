@@ -2,9 +2,34 @@
 <html>
   <head>
     <title>Snake</title>
-    <body>
-      <h2 id="score">Score: 0</h2>
-      <canvas id="game" height="500" width="500"></canvas>
-    </body>
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+    <style>
+      #game {
+        border: 3px solid tomato;
+      }
+      body,
+      html {
+        font-family: "Roboto", sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .parent {
+        height: 100%;
+        width: 100%;
+        text-align: center;
+      }
+      .center {
+        margin: 0 auto;
+      }
+    </style>
   </head>
+  <body>
+    <div class="parent">
+      <div class="center">
+        <h2 id="score">Score: 0</h2>
+        <canvas id="game" height="500" width="500"></canvas>
+        <div><button id="start-game">Start Game</button></div>
+      </div>
+    </div>
+  </body>
 </html>
