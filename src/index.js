@@ -123,6 +123,7 @@ SnakeGame.endGame = async function() {
     if (result.value) {
       SnakeGame.restart();
     } else {
+      SnakeGame.restart();
       SnakeGame.stop();
     }
   });
@@ -140,4 +141,4 @@ SnakeGame.getScores();
 
 const startGameButton = document.getElementById("start-game");
 startGameButton.hidden = true;
-startGameButton.addEventListener("click", SnakeGame.restart.bind(SnakeGame));
+startGameButton.addEventListener("click", SnakeGame.start.bind(SnakeGame));

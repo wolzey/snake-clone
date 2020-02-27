@@ -20,6 +20,7 @@ const Game = (canvas, options = { bricks: 100, interval: 20 }) => {
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
     stop() {
+      this.started = false;
       const startButton = document.getElementById("start-game");
       startButton.hidden = false;
       clearInterval(this.timer);
@@ -84,6 +85,15 @@ const Game = (canvas, options = { bricks: 100, interval: 20 }) => {
             this.player.setVelocity(Point(0, this.blockSize));
           }
           break;
+        case 80:
+          this.stop();
+          break;
+        case 13:
+          if (!this.started) {
+            this.start();
+          }
+
+          break;
         default:
           break;
       }
@@ -102,6 +112,7 @@ const Game = (canvas, options = { bricks: 100, interval: 20 }) => {
     },
     start() {
       document.getElementById("start-game").hidden = true;
+      this.started = true;
       this.timer = setInterval(this.loop, this.interval);
     },
     setGameSpeed(interval) {
