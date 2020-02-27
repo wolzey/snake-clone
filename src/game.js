@@ -92,7 +92,6 @@ const Game = (canvas, options = { bricks: 100, interval: 20 }) => {
           if (!this.started) {
             this.start();
           }
-
           break;
         default:
           break;
