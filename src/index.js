@@ -110,7 +110,8 @@ SnakeGame.restart = function() {
   SnakeGame.start();
 };
 
-SnakeGame.endGame = function() {
+SnakeGame.endGame = async function() {
+  await SnakeGame.sendScore();
   Swal.fire({
     icon: "error",
     title: "Game Over!",
@@ -135,6 +136,7 @@ SnakeGame.loop = function() {
 };
 
 SnakeGame.start();
+SnakeGame.getScores();
 
 const startGameButton = document.getElementById("start-game");
 startGameButton.hidden = true;

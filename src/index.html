@@ -21,6 +21,12 @@
       .center {
         margin: 0 auto;
       }
+
+      .leaderboard {
+        margin: 0 auto;
+        width: 500px;
+        text-align: left;
+      }
     </style>
   </head>
   <body>
@@ -29,6 +35,9 @@
         <h2 id="score">Score: 0</h2>
         <canvas id="game" height="500" width="500"></canvas>
         <div><button id="start-game">Start Game</button></div>
+        <div class="leaderboard">
+          <ol id="leaderboard"></ol>
+        </div>
       </div>
     </div>
   </body>

@@ -23,6 +23,8 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
+    "axios": "^0.19.2",
+    "firebase": "^7.9.1",
     "sweetalert2": "^9.8.2"
   }
 }

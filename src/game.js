@@ -1,4 +1,6 @@
+import axios from "axios";
 import { Point } from "./index";
+import Swal from "sweetalert2";
 
 const Game = (canvas, options = { bricks: 100, interval: 20 }) => {
   const blockSize = canvas.height / options.bricks;
@@ -13,16 +15,46 @@ const Game = (canvas, options = { bricks: 100, interval: 20 }) => {
     score: 0,
     interval: options.interval,
     timer: null,
+    leaderboard: [],
     clear() {
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
-
     stop() {
       const startButton = document.getElementById("start-game");
       startButton.hidden = false;
       clearInterval(this.timer);
     },
+    async getScores() {
+      const { data: scores } = await axios.get("https://snake-clone.herokuapp.com/scores");
+      this.leaderboard = scores;
+      const leaderboard = document.getElementById("leaderboard");
+      const html = this.leaderboard.map(score => {
+        return `<li>${score.username}: ${score.score}</li>`;
+      });
+      leaderboard.innerHTML = html.join("\n");
+    },
+    async sendScore() {
+      const score = this.score;
+      let username = localStorage.getItem("s:username");
 
+      if (!username) {
+        const { value } = await Swal.fire({
+          title: "Enter your username",
+          input: "text",
+          showCancelButton: true
+        });
+
+        username = value;
+      }
+
+      localStorage.setItem("s:username", username);
+
+      if (username) {
+        axios.post("https://snake-clone.herokuapp.com/scores", { username, score });
+      }
+
+      return true;
+    },
     handleKeydown(event) {
       if (!this.player) return;
 
