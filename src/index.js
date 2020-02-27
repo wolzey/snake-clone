@@ -57,7 +57,7 @@ export const Player = (game, name) => {
 
       if (head.x < 0) {
         head.x = game.canvas.width - game.blockSize;
-      } else if (head.x > game.canvas.width) {
+      } else if (head.x > game.canvas.width - game.blockSize) {
         head.x = 0;
       } else if (head.y < 0) {
         head.y = game.canvas.height - game.blockSize;
