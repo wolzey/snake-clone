@@ -59,22 +59,26 @@ const Game = (canvas, options = { bricks: 100, interval: 20 }) => {
       if (!this.player) return;
 
       switch (event.keyCode) {
+        case 65:
         case 37:
           if (this.player.velocity.x <= 0) {
             this.player.setVelocity(Point(-this.blockSize, 0));
           }
           break;
         case 38:
+        case 87:
           if (this.player.velocity.y <= 0) {
             this.player.setVelocity(Point(0, -this.blockSize));
           }
           break;
+        case 68:
         case 39:
           if (this.player.velocity.x >= 0) {
             this.player.setVelocity(Point(this.blockSize, 0));
           }
 
           break;
+        case 83:
         case 40:
           if (this.player.velocity.y >= 0) {
             this.player.setVelocity(Point(0, this.blockSize));
