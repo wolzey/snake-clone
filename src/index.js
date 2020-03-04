@@ -1,144 +1,58 @@
-import Swal from "sweetalert2";
-import Game from "./game";
+import Game from "./scripts/Game";
+import Engine from "./scripts/Engine";
+import Display from "./scripts/Display";
+import Controller from "./scripts/Controller";
 
-const canvas = document.getElementById("game");
-const SnakeGame = Game(canvas, { bricks: 50, interval: 50 });
+import SnakeSheet from "./assets/blue_snake.png";
+const tile_sheet = new Image();
+tile_sheet.src = SnakeSheet;
 
-export const Point = (x, y) => {
-  return {
-    x,
-    y,
-    draw(context, size) {
-      context.fillRect(this.x, this.y, size, size);
-    },
-    add(point) {
-      return Point(this.x + point.x, this.y + point.y);
-    }
-  };
+const canvas = document.querySelector("canvas");
+
+const keyDownUp = function(event) {
+  controller.keyDownUp(event.type, event.keyCode);
 };
 
-export const Player = (game, name) => {
-  const startingSegments = [
-    Point(game.blockSize * 10, game.blockSize * 20),
-    Point(game.blockSize * 9, game.blockSize * 20),
-    Point(game.blockSize * 8, game.blockSize * 20),
-    Point(game.blockSize * 7, game.blockSize * 20),
-    Point(game.blockSize * 6, game.blockSize * 20),
-    Point(game.blockSize * 5, game.blockSize * 20)
-  ];
-  return {
-    velocity: Point(game.blockSize, 0),
-    setVelocity(point) {
-      this.velocity = point;
-    },
-    name,
-    segments: startingSegments,
-    draw() {
-      for (let i = 0; i < this.segments.length; i++) {
-        this.segments[i].draw(game.context, game.blockSize);
-      }
-    },
-    eatsFood(head) {
-      return head.x === game.food.position.x && head.y === game.food.position.y;
-    },
-    checkEdges(head) {
-      for (let i = 0; i < this.segments.length; i++) {
-        const currentSegment = this.segments[i];
+const update = function() {
+  if (controller.left.active) {
+    game.world.player.moveLeft();
+  } else if (controller.right.active) {
+    game.world.player.moveRight();
+  } else if (controller.up.active) {
+    game.world.player.moveUp();
+  } else if (controller.down.active) {
+    game.world.player.moveDown();
+  }
 
-        if (head.x === currentSegment.x && head.y === currentSegment.y) {
-          game.stop();
-          game.endGame();
-        }
-      }
-    },
-    loop() {
-      // Add new segment to the front remove the last element
-      const head = this.segments[0].add(this.velocity);
-
-      if (head.x < 0) {
-        head.x = game.canvas.width - game.blockSize;
-      } else if (head.x > game.canvas.width - game.blockSize) {
-        head.x = 0;
-      } else if (head.y < 0) {
-        head.y = game.canvas.height - game.blockSize;
-      } else if (head.y > game.canvas.height - game.blockSize) {
-        head.y = 0;
-      }
-
-      this.checkEdges(head);
-
-      if (this.eatsFood(head)) {
-        const tail = this.segments[this.segments.length - 1];
-        game.setScore(game.score + 1);
-        this.segments.push(Point(tail.x + game.blockSize, tail.y));
-
-        game.food.destroy();
-      }
-
-      this.segments.unshift(head);
-      this.segments.pop();
-
-      this.draw();
-    }
-  };
+  game.update();
 };
 
-const Food = game => {
-  const createRandomPosition = () => {
-    const x = Math.floor((game.canvas.width / game.blockSize) * Math.floor(Math.random() * game.blockSize));
-    const y = Math.floor((game.canvas.height / game.blockSize) * Math.floor(Math.random() * game.blockSize));
-    return Point(x, y);
-  };
-
-  return {
-    position: createRandomPosition(),
-    destroy() {
-      this.position = createRandomPosition();
-    },
-    loop() {
-      const originalColor = game.context.fillStyle;
-      game.context.fillStyle = "tomato";
-      this.position.draw(game.context, game.blockSize);
-      game.context.fillStyle = originalColor;
-    }
-  };
+const render = function() {
+  display.clear();
+  display.drawFruit(tile_sheet, 15, 64, game.world.food);
+  display.drawSnake(tile_sheet, 15, 64, game.world.player.segments);
+  display.render();
 };
 
-SnakeGame.restart = function() {
-  SnakeGame.player = Player(SnakeGame, "Ethan");
-  SnakeGame.setScore(0);
-  SnakeGame.start();
+const resize = function() {
+  display.resize(document.documentElement.clientWidth - 60, document.documentElement.clientHeight - 60, 1);
+  display.render();
 };
 
-SnakeGame.endGame = async function() {
-  await SnakeGame.sendScore();
-  Swal.fire({
-    icon: "error",
-    title: "Game Over!",
-    text: "Would you like to play again?",
-    confirmButtonText: "Let's do it",
-    cancelButtonText: "Nah",
-    showCancelButton: true
-  }).then(result => {
-    if (result.value) {
-      SnakeGame.restart();
-    } else {
-      SnakeGame.restart();
-      SnakeGame.stop();
-    }
-  });
-};
+const game = new Game();
+const display = new Display(canvas);
+const engine = new Engine(1000 / 30, update, render);
+const controller = new Controller();
 
-SnakeGame.init(Player(SnakeGame, "Ethan"), Food(SnakeGame));
-SnakeGame.loop = function() {
-  SnakeGame.clear();
-  SnakeGame.food.loop();
-  SnakeGame.player.loop();
-};
+display.buffer.canvas.height = game.world.height;
+display.buffer.canvas.width = game.world.width;
+display.buffer.imageSmoothingEnabled = false;
 
-SnakeGame.start();
-SnakeGame.getScores();
+window.addEventListener("resize", resize);
+window.addEventListener("keydown", keyDownUp);
+window.addEventListener("keyup", keyDownUp);
 
-const startGameButton = document.getElementById("start-game");
-startGameButton.hidden = true;
-startGameButton.addEventListener("click", SnakeGame.start.bind(SnakeGame));
+tile_sheet.addEventListener("load", () => {
+  resize();
+  engine.start();
+});
