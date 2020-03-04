@@ -38,7 +38,7 @@ const render = function() {
 };
 
 const resize = function() {
-  display.resize(document.documentElement.clientWidth - 60, document.documentElement.clientHeight - 60, 1);
+  display.resize(document.documentElement.clientWidth - 100, document.documentElement.clientHeight - 100, 1);
   display.render();
 };
 

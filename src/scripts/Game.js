@@ -24,7 +24,7 @@ Game.prototype = {
     const bodySegments = object.segments;
     const snakeHead = bodySegments[0];
 
-    if (snakeHead.x > this.world.width) {
+    if (snakeHead.x >= this.world.width) {
       snakeHead.x = 0;
     }
     if (snakeHead.y > this.world.height) {
