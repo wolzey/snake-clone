@@ -70,26 +70,7 @@ Game.Point.prototype = {
 };
 
 Game.Player = function() {
-  this.segments = [
-    new Game.Point(230, 200),
-    new Game.Point(220, 200),
-    new Game.Point(210, 200),
-    new Game.Point(200, 200),
-    new Game.Point(190, 200),
-    new Game.Point(180, 200),
-    new Game.Point(170, 200),
-    new Game.Point(160, 200),
-    new Game.Point(150, 200),
-    new Game.Point(140, 200),
-    new Game.Point(130, 200),
-    new Game.Point(120, 200),
-    new Game.Point(110, 200),
-    new Game.Point(100, 200),
-    new Game.Point(90, 200),
-    new Game.Point(80, 200),
-    new Game.Point(70, 200),
-    new Game.Point(60, 200)
-  ];
+  this.segments = [new Game.Point(80, 200), new Game.Point(70, 200), new Game.Point(60, 200)];
 
   this.vx = 8;
   this.vy = 0;
