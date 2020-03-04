@@ -4,6 +4,9 @@ import Display from "./scripts/Display";
 import Controller from "./scripts/Controller";
 
 import SnakeSheet from "./assets/blue_snake.png";
+import ChewSound from "./assets/chew.mp3";
+import GameOver from "./assets/gameover.mp3";
+
 const tile_sheet = new Image();
 tile_sheet.src = SnakeSheet;
 
@@ -47,6 +50,9 @@ const controller = new Controller();
 display.buffer.canvas.height = game.world.height;
 display.buffer.canvas.width = game.world.width;
 display.buffer.imageSmoothingEnabled = false;
+
+game.world.food.audio.setFile(ChewSound);
+game.gameOver.setFile(GameOver);
 
 window.addEventListener("resize", resize);
 window.addEventListener("keydown", keyDownUp);

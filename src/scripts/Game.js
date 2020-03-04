@@ -9,6 +9,7 @@ const Game = function() {
       this.player.update();
     }
   };
+  this.gameOver = new Game.AudioPlayer();
   this.update = function() {
     this.handleHeadCollision(this.world.player);
     this.world.update();
@@ -40,6 +41,7 @@ Game.prototype = {
       const current = this.world.player.segments[i];
 
       if (current.x === snakeHead.x && current.y === snakeHead.y) {
+        this.gameOver.play();
         this.world.player = new Game.Player();
       }
     }
@@ -49,6 +51,7 @@ Game.prototype = {
       Math.abs(snakeHead.y - this.world.food.position.y) < 12
     ) {
       this.world.player.addSection();
+      this.world.food.audio.play();
       this.world.food.generateNewPosition(this.world.width, this.world.height);
     }
   }
@@ -134,6 +137,7 @@ Game.Player.prototype = {
 };
 
 Game.Food = function() {
+  this.audio = new Game.AudioPlayer();
   this.position = new Game.Point(100, 400);
   this.update = function() {};
 };
@@ -143,6 +147,27 @@ Game.Food.prototype = {
     const x = Math.floor((width / 8) * Math.floor(Math.random() * 8));
     const y = Math.floor((height / 8) * Math.floor(Math.random() * 8));
     this.position = new Game.Point(x, y);
+  }
+};
+
+Game.AudioPlayer = function() {
+  this.sound = null;
+  this.setFile = function(file) {
+    this.sound = document.createElement("audio");
+    this.sound.src = file;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+  };
+};
+
+Game.AudioPlayer.prototype = {
+  play: function() {
+    if (this.sound) this.sound.play();
+  },
+  stop: function() {
+    if (this.sound) this.sound.pause();
   }
 };
 
